@@ -32,7 +32,7 @@ const ProductCard = (props: Props) => {
 
             <Carousel
                 swipeable={true}
-                draggable={true}
+                draggable={false}
                 showDots={true}
                 responsive={responsive}
                 ssr={true} // means to render carousel on server-side.

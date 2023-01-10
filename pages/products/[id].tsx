@@ -10,9 +10,16 @@ type Props = {}
 
 const Product = (props: Props) => {
   const [show, setShow] = useState<boolean>(false)
+  const [variant, setVariant] = useState<String>('')
+
   const reviewsHandler = () => {
     setShow(prev => !prev)
   }
+
+  const variantHandler = (variant: String) => {
+    setVariant(variant)
+  }
+
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -37,7 +44,7 @@ const Product = (props: Props) => {
       <div>
         <Carousel
           swipeable={true}
-          draggable={true}
+          draggable={false}
           showDots={true}
           responsive={responsive}
           ssr={true} // means to render carousel on server-side.
@@ -66,6 +73,30 @@ const Product = (props: Props) => {
             priority
           />
         </Carousel>
+
+        <div className='flex flex-col space-y-4 p-6'>
+          <div className='space-y-1'>
+            <h3 className='tracking-wide font-semibold text-lg lg:text-xl'>Variants</h3>
+            <div className=' flex space-x-4'>
+
+              {
+                ["XS", "SMALL", "MEDIUM", "LARGE", "XL"].map((v, index) =>
+                  <div
+                    key={index}
+                    className={variant === v ? "font-semibold bg-gray-300 border-gray-300 border-2 px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300 hover:border-gray-300" :
+                    "border-2 px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300 hover:border-gray-300"}
+                    onClick={() => variantHandler(v)}
+                  >
+                    {v}
+                  </div>
+                )
+              }
+
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
 
