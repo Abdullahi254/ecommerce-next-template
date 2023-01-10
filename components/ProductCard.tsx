@@ -31,8 +31,8 @@ const ProductCard = (props: Props) => {
         <div className=" bg-gray-50 p-4 relative rounded-lg shadow-sm">
 
             <Carousel
-                swipeable={false}
-                draggable={false}
+                swipeable={true}
+                draggable={true}
                 showDots={true}
                 responsive={responsive}
                 ssr={true} // means to render carousel on server-side.
@@ -63,7 +63,7 @@ const ProductCard = (props: Props) => {
             </Carousel>
 
             <Link href={`/products/kwikwi`}>
-                <div className=' text-center mt-6 hover:text-blue-700 cursor-pointer'>
+                <div className=' text-center mt-6 hover:text-indigo-600 cursor-pointer'>
                     <p className='font-semibold tracking-wide uppercase'>Polo Shirt</p>
                     <span className=' text-sm text-gray-400 font-bold tracking-wide'>KSH100.00</span>
                 </div>
