@@ -1,16 +1,22 @@
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useState, createRef } from 'react'
 import testImg from "../../public/test3.png"
 import testImg2 from "../../public/test.png"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { AiOutlineDown } from "react-icons/ai"
 import Comment from '../../components/Comment';
+import {useDispatch } from 'react-redux'
+import {addToCart} from '../../redux/features/cart/cartSlice'
 type Props = {}
 
 const Product = (props: Props) => {
   const [show, setShow] = useState<boolean>(false)
   const [variant, setVariant] = useState<String>('')
+  
+  const quantityRef = createRef<HTMLSelectElement>()
+
+  const dispatch = useDispatch()
 
   const reviewsHandler = () => {
     setShow(prev => !prev)
@@ -18,6 +24,21 @@ const Product = (props: Props) => {
 
   const variantHandler = (variant: String) => {
     setVariant(variant)
+  }
+
+  const handleAddToCart = ()=>{
+    if(variant.length>1 && quantityRef.current?.value){
+      const item = {
+        id: 'yellow',
+        slug: 'yellow',
+        name: 'yellow',
+        variant: variant,
+        price: 200,
+        quantity: parseInt(quantityRef.current.value),
+        subTotal: 200 * parseInt(quantityRef.current.value),
+      }
+      dispatch(addToCart(item))
+    }return
   }
 
   const responsive = {
@@ -114,7 +135,7 @@ const Product = (props: Props) => {
           <h3 className=' font-semibold text-lg lg:text-xl'>Quantity</h3>
           <div className=' relative'>
             <AiOutlineDown className='absolute right-[2%] lg:right-[72%] top-[30%] text-gray-500 -z-10' />
-            <select className=" w-full lg:w-[30%] p-2.5 text-gray-500 bg-transparent border rounded-md shadow-sm outline-none appearance-none cursor-pointer">
+            <select className=" w-full lg:w-[30%] p-2.5 text-gray-500 bg-transparent border rounded-md shadow-sm outline-none appearance-none cursor-pointer" ref={quantityRef}>
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -126,6 +147,7 @@ const Product = (props: Props) => {
         <button
           className=' w-[40%] lg:w-[30%] bg-indigo-600 py-3 text-white
           rounded-md font-semibold uppercase hover:bg-gray-500'
+          onClick={handleAddToCart}
         >
           ADD TO CART
         </button>
