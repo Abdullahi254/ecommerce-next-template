@@ -10,6 +10,7 @@ type Props = {}
 
 const Navbar = (props: Props) => {
     const total = useSelector((state: RootState) => state.cart.total)
+    const items = useSelector((state: RootState) => state.cart.items)
     return (
         <div className='max-w-7xl mx-auto my-4 p-4 px-6 flex justify-between'>
 
@@ -36,7 +37,8 @@ const Navbar = (props: Props) => {
             </div>
 
             <Link href="/cart">
-                <div className=' flex items-center cursor-pointer'>
+                <div className='relative flex items-center cursor-pointer'>
+                    <span className='absolute top-[-52%] left-[15%] px-2 rounded-full bg-indigo-600 text-sm text-white'>{items.length-1}</span>
                     <BsCart3 className=' text-[26px] mr-4 text-gray-400' />
                     <span className='tracking-wide font-semibold text-sm md:text-base'>KSH{total.toFixed(2)}</span>
                 </div>
