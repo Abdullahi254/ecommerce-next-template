@@ -3,10 +3,13 @@ import Link from 'next/link'
 import React from 'react'
 import logo from "../public/logo-2-trimmy.png"
 import {BsCart3} from "react-icons/bs"
+import { useSelector} from 'react-redux'
+import type { RootState } from '../redux/app/store'
 
 type Props = {}
 
 const Navbar = (props: Props) => {
+    const total = useSelector((state: RootState) => state.cart.total)
     return (
         <div className='max-w-7xl mx-auto my-4 p-4 px-6 flex justify-between'>
 
@@ -34,7 +37,7 @@ const Navbar = (props: Props) => {
 
             <div className=' flex items-center cursor-pointer'>
                 <BsCart3 className=' text-[26px] mr-4 text-gray-400'/>
-                <span className='tracking-wide'>KSH0.00</span>
+                <span className='tracking-wide font-semibold text-sm md:text-base'>KSH{total.toFixed(2)}</span>
             </div>
 
         </div>
