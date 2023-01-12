@@ -44,7 +44,7 @@ export const cartSlice = createSlice({
                     subTotal
                 }
                 state.items.splice(index, 1, updatedItem)
-                state.total += subTotal
+                state.total += action.payload.subTotal
             } else {
                 state.items.push(action.payload)
                 state.total += action.payload.subTotal
