@@ -53,13 +53,31 @@ export const cartSlice = createSlice({
         removeFromCart: (state, action: PayloadAction<number>) => {
             const filtered = state.items[action.payload]
             const subTotal = filtered.subTotal
-            state.items.splice(action.payload,1)
+            state.items.splice(action.payload, 1)
             state.total -= subTotal
+        },
+        reduceItemQuantity: (state, action: PayloadAction<number>) => {
+            const filtered = state.items[action.payload]
+            const updatedQuantity = filtered.quantity - 1
+            const updatedSubTotal = filtered.price * updatedQuantity
+            if (updatedQuantity < 1) {
+                state.items.splice(action.payload, 1)
+                state.total -= filtered.price
+            } else {
+                const updatedItem: typeof initialState.items[0] = {
+                    ...filtered,
+                    quantity: updatedQuantity,
+                    subTotal: updatedSubTotal
+                }
+                state.items.splice(action.payload, 1, updatedItem)
+                state.total -= filtered.price
+            }
+
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { addToCart, removeFromCart } = cartSlice.actions
+export const { addToCart, removeFromCart, reduceItemQuantity } = cartSlice.actions
 
 export default cartSlice.reducer
