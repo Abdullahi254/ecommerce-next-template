@@ -6,14 +6,14 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { AiOutlineDown } from "react-icons/ai"
 import Comment from '../../components/Comment';
-import {useDispatch } from 'react-redux'
-import {addToCart} from '../../redux/features/cart/cartSlice'
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../../redux/features/cart/cartSlice'
 type Props = {}
 
 const Product = (props: Props) => {
   const [show, setShow] = useState<boolean>(false)
   const [variant, setVariant] = useState<String>('')
-  
+  const [cartError, setCartError] = useState<boolean>(false)
   const quantityRef = createRef<HTMLSelectElement>()
 
   const dispatch = useDispatch()
@@ -26,8 +26,8 @@ const Product = (props: Props) => {
     setVariant(variant)
   }
 
-  const handleAddToCart = ()=>{
-    if(variant.length>1 && quantityRef.current?.value){
+  const handleAddToCart = () => {
+    if (variant.length > 1 && quantityRef.current?.value) {
       const item = {
         id: 'yellow',
         slug: 'yellow',
@@ -38,7 +38,12 @@ const Product = (props: Props) => {
         subTotal: 200 * parseInt(quantityRef.current.value),
       }
       dispatch(addToCart(item))
-    }return
+    } else {
+      setCartError(true)
+      setTimeout(() => {
+        setCartError(false)
+      }, 3000)
+    }
   }
 
   const responsive = {
@@ -61,7 +66,7 @@ const Product = (props: Props) => {
     }
   };
   return (
-    <div className=' grid grid-cols-1 lg:grid-cols-2 gap-4  max-w-7xl mx-auto my-6'>
+    <div className=' grid grid-cols-1 lg:grid-cols-2 gap-4  max-w-7xl mx-auto my-6 overflow-x-hidden'>
       <div>
         <Carousel
           swipeable={true}
@@ -105,7 +110,7 @@ const Product = (props: Props) => {
                   <div
                     key={index}
                     className={variant === v ? "font-semibold bg-gray-300 border-gray-300 border-2 px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300 hover:border-gray-300" :
-                    "border-2 px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300 hover:border-gray-300"}
+                      "border-2 px-4 py-2 rounded-md text-sm cursor-pointer hover:bg-gray-300 hover:border-gray-300"}
                     onClick={() => variantHandler(v)}
                   >
                     {v}
@@ -144,13 +149,22 @@ const Product = (props: Props) => {
           </div>
         </div>
 
-        <button
-          className=' w-[40%] lg:w-[30%] bg-indigo-600 py-3 text-white
+        <div className='py-2 inline-block space-x-2 relative'>
+          <button
+            className=' w-[40%] lg:w-[30%] bg-indigo-600 py-3 text-white
           rounded-md font-semibold uppercase hover:bg-gray-500'
-          onClick={handleAddToCart}
-        >
-          ADD TO CART
-        </button>
+            onClick={handleAddToCart}
+          >
+            ADD TO CART
+          </button>
+
+          <span
+            className={cartError ? ' text-red-500 font-semibold text-sm absolute top-[30%] transition ease-in-out delay-300 translate-x-2 duration-300'
+              : 'translate-x-[1000px] absolute invisible'}>
+            please choose a variant
+          </span>
+
+        </div>
 
         <div className='space-y-3 px-2'>
           <div className=' flex justify-between py-2 items-center cursor-pointer border-b-2 border-gray-500' onClick={reviewsHandler}>
