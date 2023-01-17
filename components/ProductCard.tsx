@@ -1,13 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
-import test from "../public/test3.png"
-import test2 from "../public/test.png"
 import Link from 'next/link'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-type Props = {}
+import { Product } from '../typing'
 
-const ProductCard = (props: Props) => {
+type Props = {
+    product: Product
+}
+
+const ProductCard = ({ product }: Props) => {
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -27,6 +29,8 @@ const ProductCard = (props: Props) => {
             items: 1
         }
     };
+
+  
     return (
         <div className=" bg-gray-50 p-4 relative rounded-lg shadow-sm">
 
@@ -46,26 +50,23 @@ const ProductCard = (props: Props) => {
                 dotListClass="custom-dot-list-style"
                 itemClass="carousel-item-padding-40-px"
             >
-                <Image
-                    src={test}
-                    alt="Test image"
-                    width={800}
-                    height={800}
-                    priority
-                />
-                <Image
-                    src={test2}
-                    alt="Test image"
-                    width={800}
-                    height={800}
-                    priority
-                />
+                {
+                    product.images.map((img, index) =>
+                        <Image
+                            key={index}
+                            src={img.url.toString()}
+                            alt={product.name}
+                            width={800}
+                            height={800}
+                            priority
+                        />)
+                }
             </Carousel>
 
-            <Link href={`/products/kwikwi`}>
+            <Link href={`/products/${product.slug}`}>
                 <div className=' text-center mt-6 hover:text-indigo-600 cursor-pointer'>
-                    <p className='font-semibold tracking-wide uppercase'>Polo Shirt</p>
-                    <span className=' text-sm text-gray-400 font-bold tracking-wide'>KSH100.00</span>
+                    <p className='font-semibold tracking-wide uppercase'>{product.name}</p>
+                    <span className=' text-sm text-gray-400 font-bold tracking-wide'>KSH{product.price.toFixed(2)}</span>
                 </div>
             </Link>
 

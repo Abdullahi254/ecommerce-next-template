@@ -2,16 +2,18 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import ProductCard from '../components/ProductCard'
 import type { NextPage, GetStaticProps } from "next"
+import { Product } from '../typing'
+import { getProducts } from '../services'
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 
 const Home: NextPage<{
-  papa: String
+  products: Product[]
 }> = (
   {
-    papa
+    products
   }
 ) => {
     return (
@@ -24,10 +26,9 @@ const Home: NextPage<{
         </Head>
 
         <main className=' grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto px-6'>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+          {
+            products.map((product, index) => <ProductCard key={index} product={product} />)
+          }
         </main>
 
       </>
@@ -37,12 +38,12 @@ const Home: NextPage<{
 export default Home
 
 export const getStaticProps: GetStaticProps<{
-  papa: String
+  products: Product[]
 }> = async () => {
-  const papa = "papa"
+  const products = await getProducts()
   return {
     props: {
-      papa
+      products
     },
     revalidate: 10
   }
