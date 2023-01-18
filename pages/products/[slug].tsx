@@ -44,6 +44,7 @@ const Product: NextPage<{
           price: 200,
           quantity: parseInt(quantityRef.current.value),
           subTotal: product.price * parseInt(quantityRef.current.value),
+          image:product.images[0].url
         }
         dispatch(addToCart(item))
       } else {

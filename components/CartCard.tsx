@@ -32,7 +32,7 @@ const CartCard = ({ item, index }: Props) => {
         <div className='bg-gray-100 p-6 flex justify-between items-center rounded-md relative'>
             <div className='flex space-x-2 items-center'>
                 <Image
-                    src={testImg}
+                    src={item.image.toString()}
                     alt="testImg"
                     width={800}
                     height={800}
@@ -41,7 +41,7 @@ const CartCard = ({ item, index }: Props) => {
                 />
                 <div>
                     <p className=' font-semibold'>{item.name}-<span className='text-xs font-semi-bold text-gray-500'>({item.variant})</span></p>
-                    <p className=' text-xs text-gray-400 hover:text-indigo-600 cursor-pointer' onClick={removeHandler}>X Remove</p>
+                    <p className=' text-xs text-gray-400 hover:text-red-500 cursor-pointer' onClick={removeHandler}>X Remove</p>
                 </div>
             </div>
 

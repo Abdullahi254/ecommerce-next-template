@@ -10,6 +10,7 @@ export interface CartState {
         price: number,
         quantity: number,
         subTotal: number,
+        image:string
     }],
     total: number
 
@@ -23,7 +24,8 @@ const initialState: CartState = {
         quantity: 0,
         slug: '',
         subTotal: 0,
-        variant: ''
+        variant: '',
+        image:''
     }],
     total: 0
 }
