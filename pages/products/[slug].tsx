@@ -37,13 +37,13 @@ const Product: NextPage<{
     const handleAddToCart = () => {
       if (variant.length > 1 && quantityRef.current?.value) {
         const item = {
-          id: 'yellow',
-          slug: 'yellow',
-          name: 'yellow',
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
           variant: variant,
           price: 200,
           quantity: parseInt(quantityRef.current.value),
-          subTotal: 200 * parseInt(quantityRef.current.value),
+          subTotal: product.price * parseInt(quantityRef.current.value),
         }
         dispatch(addToCart(item))
       } else {
