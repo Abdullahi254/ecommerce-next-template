@@ -9,13 +9,15 @@ import Comment from '../../components/Comment';
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next"
-import { Product } from '../../typing';
-import { getProducts } from '../../services';
+import { Comment as CommentType, Product } from '../../typing';
+import { getCommentsFromSlug, getProducts } from '../../services';
 
 const Product: NextPage<{
-  product: Product
+  product: Product,
+  comments:CommentType[]
 }> = ({
-  product
+  product,
+  comments
 }) => {
     const [show, setShow] = useState<boolean>(false)
     const [variant, setVariant] = useState<String>(product.variants[0].name)
@@ -176,7 +178,7 @@ const Product: NextPage<{
 
             <div className={show ? 'block' : 'hidden'}>
               {
-                [1, 2, 3].map((index) => <Comment key={index} />)
+                comments.map((comment,index) => <Comment key={index} comment={comment} />)
               }
             </div>
 
@@ -210,7 +212,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<{
-  product: Product
+  product: Product,
+  comments:CommentType[]
 }> = async (context) => {
   const products: Product[] = await getProducts()
   const slugList = products.map(product => product.slug)
@@ -220,11 +223,12 @@ export const getStaticProps: GetStaticProps<{
       notFound: true
     }
   }
-  // const reviews = await getReviewsFromSlug(slug)
+  const comments:CommentType[] = await getCommentsFromSlug(slug)
   const product = products.find(product => product.slug === slug) as Product
   return {
     props: {
-      product
+      product,
+      comments
     },
     revalidate: 10
   }

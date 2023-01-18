@@ -17,3 +17,12 @@ export interface Product {
     variants:Variant[]
 
 }
+
+export interface Comment {
+    headline:string
+    name:string
+    email:string
+    content:string
+    rating?:number
+    createdAt:string
+}
