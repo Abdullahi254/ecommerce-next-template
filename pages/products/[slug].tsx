@@ -1,7 +1,5 @@
 import Image from 'next/image'
 import React, { useState, createRef } from 'react'
-import testImg from "../../public/test3.png"
-import testImg2 from "../../public/test.png"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { AiOutlineDown } from "react-icons/ai"
@@ -41,7 +39,7 @@ const Product: NextPage<{
           slug: product.slug,
           name: product.name,
           variant: variant,
-          price: 200,
+          price: product.price,
           quantity: parseInt(quantityRef.current.value),
           subTotal: product.price * parseInt(quantityRef.current.value),
           image:product.images[0].url

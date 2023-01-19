@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import React from 'react'
-import testImg from "../public/test3.png"
 import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai'
 import type { RootState } from '../redux/app/store'
 import { useDispatch } from "react-redux"
