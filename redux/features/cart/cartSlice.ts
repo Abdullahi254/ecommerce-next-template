@@ -16,7 +16,7 @@ export interface CartState {
 
 }
 
-const initialState: CartState = {
+export const initialState: CartState = {
     items: [{
         id: '',
         name: '',
@@ -34,6 +34,9 @@ export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
+        overrideCart:(state, action: PayloadAction<CartState>)=>{
+            state = action.payload
+        },
         addToCart: (state, action: PayloadAction<typeof initialState.items[0]>) => {
             const filtered = state.items.filter(item => item.id === action.payload.id && item.variant === action.payload.variant)
             if (filtered.length > 0) {
@@ -80,6 +83,6 @@ export const cartSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addToCart, removeFromCart, reduceItemQuantity } = cartSlice.actions
+export const {overrideCart, addToCart, removeFromCart, reduceItemQuantity } = cartSlice.actions
 
 export default cartSlice.reducer

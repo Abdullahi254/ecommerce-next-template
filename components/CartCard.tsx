@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai'
 import type { RootState } from '../redux/app/store'
-import { useDispatch } from "react-redux"
+import { useDispatch,useSelector } from "react-redux"
 import { addToCart, removeFromCart, reduceItemQuantity } from '../redux/features/cart/cartSlice'
 type Props = {
     item: ReturnType<(state: RootState) => typeof state.cart.items[0]>
@@ -11,6 +11,7 @@ type Props = {
 
 const CartCard = ({ item, index }: Props) => {
     const dispatch = useDispatch()
+    const cartState = useSelector((state:RootState)=>state)
     const removeHandler = () => {
         dispatch(removeFromCart(index))
     }
@@ -23,9 +24,11 @@ const CartCard = ({ item, index }: Props) => {
             subTotal: item.price * 1,
         }
         dispatch(addToCart(newItem))
+        localStorage.setItem('cart', JSON.stringify(cartState));
     }
     const reduceItem = () => {
         dispatch(reduceItemQuantity(index))
+        localStorage.setItem('cart', JSON.stringify(cartState));
     }
     return (
         <div className='bg-gray-100 p-6 flex justify-between items-center rounded-md relative'>

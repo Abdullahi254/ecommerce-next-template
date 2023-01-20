@@ -4,11 +4,13 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { AiOutlineDown } from "react-icons/ai"
 import Comment from '../../components/Comment';
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next"
 import { Comment as CommentType, Product } from '../../typing';
 import { getCommentsFromSlug, getProducts } from '../../services';
+import { RootState } from '../../redux/app/store';
+
 
 const Product: NextPage<{
   product: Product,
@@ -22,6 +24,7 @@ const Product: NextPage<{
     const [cartError, setCartError] = useState<boolean>(false)
     const quantityRef = createRef<HTMLSelectElement>()
 
+    const cartState = useSelector((state:RootState)=>state)
     const dispatch = useDispatch()
 
     const reviewsHandler = () => {
@@ -45,6 +48,7 @@ const Product: NextPage<{
           image:product.images[0].url
         }
         dispatch(addToCart(item))
+        localStorage.setItem('cart', JSON.stringify(cartState));
       } else {
         setCartError(true)
         setTimeout(() => {
