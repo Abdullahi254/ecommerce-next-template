@@ -47,8 +47,7 @@ const Product: NextPage<{
           subTotal: product.price * parseInt(quantityRef.current.value),
           image:product.images[0].url
         }
-        dispatch(addToCart(item))
-        localStorage.setItem('cart', JSON.stringify(cartState));
+        dispatch(addToCart(item))  
       } else {
         setCartError(true)
         setTimeout(() => {

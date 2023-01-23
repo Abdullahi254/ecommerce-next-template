@@ -10,7 +10,7 @@ export interface CartState {
         price: number,
         quantity: number,
         subTotal: number,
-        image:string
+        image: string
     }],
     total: number
 
@@ -25,7 +25,7 @@ export const initialState: CartState = {
         slug: '',
         subTotal: 0,
         variant: '',
-        image:''
+        image: ''
     }],
     total: 0
 }
@@ -34,8 +34,11 @@ export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        overrideCart:(state, action: PayloadAction<CartState>)=>{
-            state = action.payload
+        overrideCart: (state, action: PayloadAction<CartState>) => {
+            const newItems = action.payload.items
+            const newTotal = action.payload.total
+            state.items = newItems
+            state.total = newTotal
         },
         addToCart: (state, action: PayloadAction<typeof initialState.items[0]>) => {
             const filtered = state.items.filter(item => item.id === action.payload.id && item.variant === action.payload.variant)
@@ -54,12 +57,14 @@ export const cartSlice = createSlice({
                 state.items.push(action.payload)
                 state.total += action.payload.subTotal
             }
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         removeFromCart: (state, action: PayloadAction<number>) => {
             const filtered = state.items[action.payload]
             const subTotal = filtered.subTotal
             state.items.splice(action.payload, 1)
             state.total -= subTotal
+            localStorage.setItem('cart', JSON.stringify(state));
         },
         reduceItemQuantity: (state, action: PayloadAction<number>) => {
             const filtered = state.items[action.payload]
@@ -77,12 +82,13 @@ export const cartSlice = createSlice({
                 state.items.splice(action.payload, 1, updatedItem)
                 state.total -= filtered.price
             }
+            localStorage.setItem('cart', JSON.stringify(state));
 
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const {overrideCart, addToCart, removeFromCart, reduceItemQuantity } = cartSlice.actions
+export const { overrideCart, addToCart, removeFromCart, reduceItemQuantity } = cartSlice.actions
 
 export default cartSlice.reducer

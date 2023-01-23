@@ -24,11 +24,9 @@ const CartCard = ({ item, index }: Props) => {
             subTotal: item.price * 1,
         }
         dispatch(addToCart(newItem))
-        localStorage.setItem('cart', JSON.stringify(cartState));
     }
     const reduceItem = () => {
         dispatch(reduceItemQuantity(index))
-        localStorage.setItem('cart', JSON.stringify(cartState));
     }
     return (
         <div className='bg-gray-100 p-6 flex justify-between items-center rounded-md relative'>
