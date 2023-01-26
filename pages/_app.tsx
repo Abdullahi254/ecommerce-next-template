@@ -7,7 +7,7 @@ import { store } from '../redux/app/store'
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Layout categories={pageProps.categories}>
+      <Layout categories={pageProps.categories} collections={pageProps.collections}>
         <Component {...pageProps} />
       </Layout>
     </Provider>

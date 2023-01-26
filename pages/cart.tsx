@@ -2,6 +2,9 @@ import React from 'react'
 import CartCard from '../components/CartCard'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../redux/app/store'
+import type {GetStaticProps } from "next"
+import { Category, Collection} from '../typing'
+import { getCategories, getCollections} from '../services'
 
 type Props = {}
 
@@ -37,3 +40,19 @@ const Cart = (props: Props) => {
 }
 
 export default Cart
+
+export const getStaticProps: GetStaticProps<{
+  categories: Category[]
+  collections: Collection[]
+}> = async () => {
+
+  const categories = await getCategories()
+  const collections = await getCollections()
+  return {
+    props: {
+      categories,
+      collections
+    },
+    revalidate: 10
+  }
+}

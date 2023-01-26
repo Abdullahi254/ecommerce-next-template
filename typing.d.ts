@@ -36,5 +36,5 @@ export interface Category {
 export interface Collection {
     name:string
     slug:string
-    description:string
+    description?:string
 }
