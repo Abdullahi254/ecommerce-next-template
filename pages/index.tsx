@@ -2,8 +2,8 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import ProductCard from '../components/ProductCard'
 import type { NextPage, GetStaticProps } from "next"
-import { Product } from '../typing'
-import { getProducts } from '../services'
+import { Category, Product } from '../typing'
+import { getCategories, getProducts } from '../services'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -38,12 +38,15 @@ const Home: NextPage<{
 export default Home
 
 export const getStaticProps: GetStaticProps<{
-  products: Product[]
+  products: Product[],
+  categories: Category[]
 }> = async () => {
   const products = await getProducts()
+  const categories = await getCategories()
   return {
     props: {
-      products
+      products,
+      categories
     },
     revalidate: 10
   }

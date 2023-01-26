@@ -1,15 +1,28 @@
+import Link from 'next/link'
 import React from 'react'
 import { BsLinkedin, BsGithub } from "react-icons/bs"
-type Props = {}
+import { Category } from '../typing'
+type Props = {
+    categories: Category[]
+}
 
-const Footer = (props: Props) => {
+const Footer = ({ categories }: Props) => {
     return (
         <div className='grid grid-cols-3 gap-4 max-w-7xl px-6 mx-auto my-12'>
-            <ul className='col-span-3 md:col-span-1 mb-4 space-y-3'>
-                <h3 className='uppercase text-gray-400 text tracking-wide'>Categories</h3>
-                <li className='text-gray-400 cursor-pointer hover:text-black tracking-wide'>T-Shirts</li>
-                <li className='text-gray-400 cursor-pointer hover:text-black tracking-wide'>Hoodies</li>
-                <li className='text-gray-400 cursor-pointer hover:text-black tracking-wide'>Accessories</li>
+            <ul className='col-span-3 md:col-span-1 mb-4'>
+                <h3 className='uppercase text-gray-400 text tracking-wide my-3'>Categories</h3>
+                {
+                    categories && categories.map((categ, index) =>
+                        <Link key={index} href={`/categories/${categ.slug}`}>
+                            <li
+                                className='text-gray-400 cursor-pointer hover:text-black tracking-wide my-3'
+                            >
+                                {categ.name}
+                            </li>
+                        </Link>
+
+                    )
+                }
             </ul>
 
             <ul className='col-span-3 md:col-span-1 mb-4 space-y-3'>
@@ -23,7 +36,7 @@ const Footer = (props: Props) => {
 
                 <div className='flex space-x-6 items-center'>
                     <BsLinkedin className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer rounded-sm' />
-                    <BsGithub className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer'  />
+                    <BsGithub className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer' />
                 </div>
             </div>
 

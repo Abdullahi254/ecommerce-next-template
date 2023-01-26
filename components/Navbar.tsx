@@ -4,12 +4,15 @@ import React, { useEffect } from 'react'
 import logo from "../public/logo-2-trimmy.png"
 import { BsCart3 } from "react-icons/bs"
 import { useDispatch, useSelector } from 'react-redux'
-import { overrideCart} from '../redux/features/cart/cartSlice'
+import { overrideCart } from '../redux/features/cart/cartSlice'
 import type { RootState } from '../redux/app/store'
+import { Category } from '../typing'
 
-type Props = {}
+type Props = {
+    categories: Category[]
+}
 
-const Navbar = (props: Props) => {
+const Navbar = ({ categories }: Props) => {
     const total = useSelector((state: RootState) => state.cart.total)
     const items = useSelector((state: RootState) => state.cart.items)
 
@@ -17,7 +20,7 @@ const Navbar = (props: Props) => {
 
     useEffect(() => {
         const stored = localStorage.getItem('cart');
-        if(stored){
+        if (stored) {
             dispatch(overrideCart(JSON.parse(stored)))
         }
     }, [dispatch])
@@ -35,15 +38,12 @@ const Navbar = (props: Props) => {
                     />
                 </Link>
 
-                <Link href="/">
-                    <span className=' font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'>T-Shirts</span>
-                </Link>
-                <Link href="/">
-                    <span className=' font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'>Hoodies</span>
-                </Link>
-                <Link href="/">
-                    <span className=' font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'>Accessories</span>
-                </Link>
+                {
+                    categories && categories.map((categ, index) =>
+                        <Link href={`/categories/${categ.slug}`} key={index}>
+                            <span className=' font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'>{categ.name}</span>
+                        </Link>)
+                }
             </div>
 
             <Link href="/cart">

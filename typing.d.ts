@@ -30,5 +30,5 @@ export interface Comment {
 export interface Category {
     name:string
     slug:string
-    description:string
+    description?:string
 }
