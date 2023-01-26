@@ -26,3 +26,9 @@ export interface Comment {
     rating?:number
     createdAt:string
 }
+
+export interface Category {
+    name:string
+    slug:string
+    description:string
+}
