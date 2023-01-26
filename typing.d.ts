@@ -32,3 +32,9 @@ export interface Category {
     slug:string
     description?:string
 }
+
+export interface Collection {
+    name:string
+    slug:string
+    description:string
+}

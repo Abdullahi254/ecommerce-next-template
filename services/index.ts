@@ -1,5 +1,5 @@
 import { gql, GraphQLClient } from "graphql-request"
-import { Product, Comment, Category } from "../typing"
+import { Product, Comment, Category, Collection } from "../typing"
 
 const hygraph = new GraphQLClient(
   process.env.NEXT_PUBLIC_HYGRAPH_ENDPOINT!
@@ -69,4 +69,19 @@ export const getCategories = async (): Promise<Category[]> => {
   const rawResult = await hygraph.request(query)
   const categories: Category[] = await rawResult.categories
   return categories
+}
+
+export const getCollections = async (): Promise<Collection[]> => {
+  const query = gql`
+  query GetCollections {
+    collections {
+      name
+      slug
+      description
+    }
+  }
+  `
+  const rawResult = await hygraph.request(query)
+  const collections: Collection[] = await rawResult.collections
+  return collections
 }
