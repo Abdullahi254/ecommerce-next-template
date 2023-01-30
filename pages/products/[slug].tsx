@@ -7,8 +7,8 @@ import Comment from '../../components/Comment';
 import { useDispatch,useSelector } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next"
-import { Comment as CommentType, Product } from '../../typing';
-import { getCommentsFromSlug, getProducts } from '../../services';
+import { Comment as CommentType, Product, Category, Collection } from '../../typing';
+import { getCommentsFromSlug, getProducts, getCategories, getCollections } from '../../services';
 import { RootState } from '../../redux/app/store';
 
 
@@ -214,8 +214,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<{
-  product: Product,
+  product: Product
   comments:CommentType[]
+  categories: Category[]
+  collections: Collection[]
 }> = async (context) => {
   const products: Product[] = await getProducts()
   const slugList = products.map(product => product.slug)
@@ -227,10 +229,14 @@ export const getStaticProps: GetStaticProps<{
   }
   const comments:CommentType[] = await getCommentsFromSlug(slug)
   const product = products.find(product => product.slug === slug) as Product
+  const categories = await getCategories()
+  const collections = await getCollections()
   return {
     props: {
       product,
-      comments
+      comments,
+      categories,
+      collections
     },
     revalidate: 10
   }
