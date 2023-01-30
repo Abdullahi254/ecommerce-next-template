@@ -10,7 +10,7 @@ type Props = {
 const Footer = ({ categories, collections }: Props) => {
     return (
         <div className='grid grid-cols-3 gap-4 max-w-7xl px-6 mx-auto my-12'>
-            <ul className='col-span-3 md:col-span-1 mb-4'>
+            <ul className='col-span-3 md:col-span-1 mb-4 w-fit'>
                 <h3 className='uppercase text-gray-400 text tracking-wide my-3'>Categories</h3>
                 {
                     categories && categories.map((categ, index) =>
@@ -26,7 +26,7 @@ const Footer = ({ categories, collections }: Props) => {
                 }
             </ul>
 
-            <ul className='col-span-3 md:col-span-1 mb-4'>
+            <ul className='col-span-3 md:col-span-1 mb-4 w-fit'>
                 <h3 className='uppercase text-gray-400 text tracking-wide my-3'>Collections</h3>
                 {
                     collections && collections.map((coll, index) =>
