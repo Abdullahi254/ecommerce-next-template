@@ -116,3 +116,36 @@ export const getProductsFromSlug = async (slug: string): Promise<Product[]> => {
   const products: Product[] = await rawResult.products
   return products
 }
+
+export const getProductsFromCollectionSlug = async (slug: string): Promise<Product[]> => {
+  const query = gql`
+  query GetProductsFromCollectionSlug($slug: String!) {
+    products(
+      where:{collections_every: {slug: $slug}}
+    ) {
+      id
+      name
+      slug
+      description
+      images {
+        url
+      }
+      price
+      variants {
+        ... on ProductColorVariant {
+          name
+        }
+        ... on ProductSizeColorVariant {
+          name
+        }
+        ... on ProductSizeVariant {
+          name
+        }
+      }
+    }
+  }
+      `
+  const rawResult = await hygraph.request(query, { slug })
+  const products: Product[] = await rawResult.products
+  return products
+}
