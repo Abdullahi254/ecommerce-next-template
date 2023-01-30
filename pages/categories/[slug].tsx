@@ -1,17 +1,24 @@
 import React from 'react'
-import type { GetStaticProps, GetStaticPaths } from "next"
+import type { GetStaticProps, GetStaticPaths, NextPage } from "next"
 import { Category, Collection, Product } from '../../typing'
 import { getCategories, getCollections, getProductsFromSlug } from '../../services'
+import ProductCard from '../../components/ProductCard'
 
-type Props = {}
-
-const CategoryComponent = (props: Props) => {
-    return (
-        <div>
-
-        </div>
-    )
-}
+const CategoryComponent: NextPage<{
+    products: Product[]
+}> = ({
+    products
+}) => {
+        return (
+            <>
+                <main className=' grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto px-6'>
+                    {
+                        products.map((product, index) => <ProductCard key={index} product={product} />)
+                    }
+                </main>
+            </>
+        )
+    }
 
 export default CategoryComponent
 
@@ -47,7 +54,7 @@ export const getStaticProps: GetStaticProps<{
         }
     }
 
-    const products:Product[] = await getProductsFromSlug(slug)
+    const products: Product[] = await getProductsFromSlug(slug)
     const collections = await getCollections()
     return {
         props: {
