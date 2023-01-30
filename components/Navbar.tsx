@@ -7,12 +7,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { overrideCart } from '../redux/features/cart/cartSlice'
 import type { RootState } from '../redux/app/store'
 import { Category } from '../typing'
+import { useRouter } from 'next/router'
 
 type Props = {
     categories: Category[]
 }
 
 const Navbar = ({ categories }: Props) => {
+    const router = useRouter()
+    const { slug } = router.query
     const total = useSelector((state: RootState) => state.cart.total)
     const items = useSelector((state: RootState) => state.cart.items)
 
@@ -41,7 +44,11 @@ const Navbar = ({ categories }: Props) => {
                 {
                     categories && categories.map((categ, index) =>
                         <Link href={`/categories/${categ.slug}`} key={index}>
-                            <span className=' font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'>{categ.name}</span>
+                            <span
+                                className= {categ.slug === slug ? 'font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block text-indigo-700 underline':
+                                'font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'}>
+                                {categ.name}
+                            </span>
                         </Link>)
                 }
             </div>
