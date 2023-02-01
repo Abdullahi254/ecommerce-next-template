@@ -1,13 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
+import React from 'react'
 import logo from "../public/logo-2-trimmy.png"
 import { BsCart3 } from "react-icons/bs"
-import { useDispatch, useSelector } from 'react-redux'
-import { overrideCart } from '../redux/features/cart/cartSlice'
-import type { RootState } from '../redux/app/store'
 import { Category } from '../typing'
 import { useRouter } from 'next/router'
+// @ts-expect-error
+import { useSnipcart} from 'use-snipcart';
 
 type Props = {
     categories: Category[]
@@ -15,18 +14,9 @@ type Props = {
 
 const Navbar = ({ categories }: Props) => {
     const router = useRouter()
+    const { cart = {} } = useSnipcart();
+    const { subtotal = 0 } = cart;
     const { slug } = router.query
-    const total = useSelector((state: RootState) => state.cart.total)
-    const items = useSelector((state: RootState) => state.cart.items)
-
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        const stored = localStorage.getItem('cart');
-        if (stored) {
-            dispatch(overrideCart(JSON.parse(stored)))
-        }
-    }, [dispatch])
     return (
         <div className='max-w-7xl mx-auto my-4 p-4 px-6 flex justify-between'>
 
@@ -45,21 +35,20 @@ const Navbar = ({ categories }: Props) => {
                     categories && categories.map((categ, index) =>
                         <Link href={`/categories/${categ.slug}`} key={index}>
                             <span
-                                className= {categ.slug === slug ? 'font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block text-indigo-700 underline':
-                                'font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'}>
+                                className={categ.slug === slug ? 'font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block text-indigo-700 underline' :
+                                    'font-semibold text-sm tracking-wide mr-4 uppercase hover:underline hidden md:inline-block'}>
                                 {categ.name}
                             </span>
                         </Link>)
                 }
             </div>
 
-            <Link href="/cart">
-                <div className='relative flex items-center cursor-pointer'>
-                    <span className='absolute top-[-52%] left-[15%] px-2 rounded-full bg-indigo-600 text-sm text-white'>{items.length - 1}</span>
-                    <BsCart3 className=' text-[26px] mr-4 text-gray-400' />
-                    <span className='tracking-wide font-semibold text-sm md:text-base'>KSH{total.toFixed(2)}</span>
-                </div>
-            </Link>
+
+            <div className='relative flex items-center cursor-pointer snipcart-checkout'>
+                <span className='absolute top-0 left-[15%] px-2 rounded-full bg-indigo-600 text-sm text-white'>{cart?.items?.count || 0}</span>
+                <BsCart3 className=' text-[26px] mr-4 text-gray-400' />
+                <span className='tracking-wide font-semibold text-sm md:text-base'>KSH{subtotal.toFixed(2)}</span>
+            </div>
         </div>
     )
 }
