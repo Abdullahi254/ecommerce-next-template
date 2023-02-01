@@ -4,7 +4,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { AiOutlineDown } from "react-icons/ai"
 import Comment from '../../components/Comment';
-import { useDispatch,useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 import type { NextPage, GetStaticProps, GetStaticPaths } from "next"
 import { Comment as CommentType, Product, Category, Collection } from '../../typing';
@@ -14,7 +14,7 @@ import { RootState } from '../../redux/app/store';
 
 const Product: NextPage<{
   product: Product,
-  comments:CommentType[]
+  comments: CommentType[]
 }> = ({
   product,
   comments
@@ -23,8 +23,9 @@ const Product: NextPage<{
     const [variant, setVariant] = useState<String>(product.variants[0].name)
     const [cartError, setCartError] = useState<boolean>(false)
     const quantityRef = createRef<HTMLSelectElement>()
+    const [quantity,setQuantity] = useState<number>(1)
 
-    const cartState = useSelector((state:RootState)=>state)
+    const cartState = useSelector((state: RootState) => state)
     const dispatch = useDispatch()
 
     const reviewsHandler = () => {
@@ -34,7 +35,6 @@ const Product: NextPage<{
     const variantHandler = (variant: String) => {
       setVariant(variant)
     }
-
     const handleAddToCart = () => {
       if (variant.length > 1 && quantityRef.current?.value) {
         const item = {
@@ -45,9 +45,9 @@ const Product: NextPage<{
           price: product.price,
           quantity: parseInt(quantityRef.current.value),
           subTotal: product.price * parseInt(quantityRef.current.value),
-          image:product.images[0].url
+          image: product.images[0].url
         }
-        dispatch(addToCart(item))  
+        dispatch(addToCart(item))
       } else {
         setCartError(true)
         setTimeout(() => {
@@ -75,6 +75,7 @@ const Product: NextPage<{
         items: 1
       }
     };
+
     return (
       <div className=' grid grid-cols-1 lg:grid-cols-2 gap-4  max-w-7xl mx-auto my-6 overflow-x-hidden'>
         <div>
@@ -97,7 +98,7 @@ const Product: NextPage<{
             {
               product.images.map((img, index) =>
                 <Image
-                key={index}
+                  key={index}
                   src={img.url.toString()}
                   alt={product.name}
                   width={800}
@@ -146,7 +147,7 @@ const Product: NextPage<{
             <h3 className=' font-semibold text-lg lg:text-xl'>Quantity</h3>
             <div className=' relative'>
               <AiOutlineDown className='absolute right-[2%] lg:right-[72%] top-[30%] text-gray-500 -z-10' />
-              <select className=" w-full lg:w-[30%] p-2.5 text-gray-500 bg-transparent border rounded-md shadow-sm outline-none appearance-none cursor-pointer" ref={quantityRef}>
+              <select className=" w-full lg:w-[30%] p-2.5 text-gray-500 bg-transparent border rounded-md shadow-sm outline-none appearance-none cursor-pointer" ref={quantityRef} onChange={()=>setQuantity(parseInt(quantityRef.current?.value|| "1"))}>
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -158,8 +159,17 @@ const Product: NextPage<{
           <div className='py-2 inline-block space-x-2 relative'>
             <button
               className=' w-[40%] lg:w-[30%] bg-indigo-600 py-3 text-white
-          rounded-md font-semibold uppercase hover:bg-gray-500'
-              onClick={handleAddToCart}
+              rounded-md font-semibold uppercase hover:bg-gray-500 snipcart-add-item'
+              data-item-id={product.id}
+              data-item-price={product.price}
+              data-item-description={product?.description}
+              data-item-image={product.images[0].url.toString()}
+              data-item-name={product.name}
+              data-item-custom1-name="variants"
+              data-item-custom1-type="readonly"
+              data-item-custom1-value={variant}
+              data-item-quantity={quantity}
+            // onClick={handleAddToCart}
             >
               ADD TO CART
             </button>
@@ -180,7 +190,7 @@ const Product: NextPage<{
 
             <div className={show ? 'block' : 'hidden'}>
               {
-                comments.map((comment,index) => <Comment key={index} comment={comment} />)
+                comments.map((comment, index) => <Comment key={index} comment={comment} />)
               }
             </div>
 
@@ -215,7 +225,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<{
   product: Product
-  comments:CommentType[]
+  comments: CommentType[]
   categories: Category[]
   collections: Collection[]
 }> = async (context) => {
@@ -227,7 +237,7 @@ export const getStaticProps: GetStaticProps<{
       notFound: true
     }
   }
-  const comments:CommentType[] = await getCommentsFromSlug(slug)
+  const comments: CommentType[] = await getCommentsFromSlug(slug)
   const product = products.find(product => product.slug === slug) as Product
   const categories = await getCategories()
   const collections = await getCollections()
