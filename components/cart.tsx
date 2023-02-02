@@ -1,5 +1,7 @@
+//THIS PAGE IS SUPPOSED TO BE AT THE PAGE DIRECTORY
+//I PLACED IT HERE SINCE I DO NOT NEED CART PAGE SINCE I'M USING SNIPCART WHICH IS PROVIDING CART HANDLING
 import React from 'react'
-import CartCard from '../components/CartCard'
+import CartCard from './CartCard'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../redux/app/store'
 import type {GetStaticProps } from "next"
