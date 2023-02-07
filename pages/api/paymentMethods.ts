@@ -1,9 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import NextCors from 'nextjs-cors'
 
+type Data = {
+  id?:string
+  name?:string
+  checkoutUrl?:string
+  error?:string
+}
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<Data[]>
 ) {
   // Run the middleware
   await NextCors(req, res, {
@@ -22,11 +29,11 @@ export default async function handler(
         name: 'M-Pesa gateway',
         checkoutUrl: 'https://dukamoto.vercel.app/paymentCheckout',
       }]
-      res.status(200).json(JSON.stringify(paymentMethodList))
+      res.status(200).json(paymentMethodList)
     } else {
-      res.status(403).send('Request not allowed');
+      res.status(403).json([{error:'Request not allowed'}]);
     }
   } else {
-    res.status(400).send('Request sent Incorrectly');
+    res.status(400).json([{error:'Request sent Incorrectly'}]);
   }
 }
