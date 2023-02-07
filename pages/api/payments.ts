@@ -25,9 +25,10 @@ export default async function handler(
     const response = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/validate?publicToken=${publicToken}`)
     if (response.ok) {
       let paymentMethodList = [{
-        id: 'M-pesa_gateway',
-        name: 'M-Pesa gateway',
+        id: 'M-pesa',
+        name: 'M-Pesa',
         checkoutUrl: 'https://dukamoto.vercel.app/paymentCheckout',
+        iconUrl: "https://dukamoto.vercel.app/mpesa.png"
       }]
       res.status(200).json(paymentMethodList)
     } else {
