@@ -9,7 +9,7 @@ export default function Document() {
         <Main />
         <NextScript />
 
-        <script dangerouslySetInnerHTML={{
+        <Script id="snipcart-script" strategy="afterInteractive" dangerouslySetInnerHTML={{
           __html: `
             window.SnipcartSettings = {
                 publicApiKey: "${process.env.NEXT_PUBLIC_SNIPCART_API_KEY}",
