@@ -1,13 +1,53 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+// import type { NextApiRequest, NextApiResponse } from 'next'
+
+// type Data = {
+//   name: string
+// }
+
+// export default function handler(
+//   req: NextApiRequest,
+//   res: NextApiResponse<Data>
+// ) {
+//   res.status(200).json({ name: 'John Doe' })
+// }
+
 import type { NextApiRequest, NextApiResponse } from 'next'
+import NextCors from 'nextjs-cors'
 
 type Data = {
-  name: string
+  id?:string
+  name?:string
+  checkoutUrl?:string
+  error?:string
 }
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data[]>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  // Run the middleware
+  await NextCors(req, res, {
+    // Options
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    origin: '*',
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
+
+  if (req.method === 'POST') {
+    const publicToken = req.body.publicToken
+    const response = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/validate?publicToken=${publicToken}`)
+    if (response.ok) {
+      let paymentMethodList = [{
+        id: 'M-pesa_gateway',
+        name: 'M-Pesa gateway',
+        checkoutUrl: 'https://dukamoto.vercel.app/paymentCheckout',
+      }]
+      res.status(200).json(paymentMethodList)
+    } else {
+      res.status(403).json([{error:'Request not allowed'}]);
+    }
+  } else {
+    res.status(400).json([{error:'Request sent Incorrectly'}]);
+  }
 }
