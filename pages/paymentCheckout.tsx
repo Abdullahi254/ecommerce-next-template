@@ -2,16 +2,19 @@ import Image from "next/image";
 import React, { createRef, useState, useEffect } from "react";
 import logo from "../public/mpesa.png"
 import type { GetStaticProps } from "next"
-import { Category, Collection } from '../typing'
+import { Address, Category, Collection, Item } from '../typing'
 import { getCategories, getCollections } from '../services'
 import { useRouter } from 'next/router'
+import Link from "next/link";
 
 
 const PaymentCheckout = () => {
     const phone = createRef<HTMLInputElement>()
     const [disable, setDisable] = useState<boolean>(true)
-    const [invoice, setInvoice] = useState()
-    const [cancelUrl, setCancelUrl] = useState<string>('')
+    const [items, setItems] = useState<Item[]>()
+    const [address, setAddress] = useState<Address>()
+    const [cancelUrl, setCancelUrl] = useState<string>("/")
+    const [amount, setAmount] = useState<number>()
     const handleInputChange = () => {
         if (phone.current?.value.length !== 9) {
             setDisable(true)
@@ -23,7 +26,7 @@ const PaymentCheckout = () => {
     const { publicToken } = router.query
 
     useEffect(() => {
-        if (typeof(publicToken) === 'string') {
+        if (typeof (publicToken) === 'string') {
             fetchInvoice(publicToken)
         }
     }, [publicToken])
@@ -33,8 +36,12 @@ const PaymentCheckout = () => {
             const res = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?publicToken=${token}`)
             if (res.ok) {
                 const paymentSession = await res.json()
-                setInvoice(paymentSession.invoice)
-                setCancelUrl(paymentSession.PaymentAuthorizationRedirectUrl)
+                if (paymentSession.invoice.items) {
+                    setItems(paymentSession.invoice.items as Item[])
+                    setAddress(paymentSession.invoice.shippingAddress as Address)
+                    setAmount(paymentSession.invoice.amount as number)
+                    setCancelUrl(paymentSession.PaymentAuthorizationRedirectUrl as string)
+                }
                 console.log(paymentSession.invoice)
             }
         } catch (err) {
@@ -49,7 +56,68 @@ const PaymentCheckout = () => {
                 <Image src={logo} alt="mpesa icon" width={120} height={120} priority className="w-auto h-auto" />
             </div>
 
-            <div className="space-y-2">
+            <div className="bg-white p-4 space-y-3">
+                <h2 className="font-semibold text-xl lg:text-2xl text-center uppercase">Order Confirmation</h2>
+
+                <div className="py-2 border-t-2  border-gray-400 pl-4">
+                    <h3 className="text-lg font-semibold">order details:</h3>
+                </div>
+
+                <div className="py-4 border-t-2  border-gray-400 ">
+                    <table className="w-full text-sm text-left text-gray-500">
+                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" className="px-6 py-3">
+                                    Product name
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Quantity
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                    UNIT PRICE
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                items?.map((item, index) => <tr key={index} className="bg-white border-b">
+                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                                        {item.name}
+                                    </th>
+                                    <td className="px-6 py-4">
+                                        {item.quantity}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        KSH{item.unitPrice.toFixed(2)}
+                                    </td>
+                                </tr>)
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="p-4 border-t-2  border-gray-400 space-y-3">
+                    <h3 className=" text-lg font-semibold">Shipping Information</h3>
+                    <div className="space-y-1">
+                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Name:</span>{address?.name}</p>
+                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Country:</span>{address?.country}</p>
+                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">City:</span>{address?.city}</p>
+                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Region:</span>{address?.region}</p>
+                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Street:</span>{address?.streetAndNumber}</p>
+                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Postal-Code:</span>{address?.postalcode}</p>
+                    </div>
+                </div>
+
+                <div className="p-4 border-t-2  border-gray-400 space-y-3 flex justify-around items-center">
+                    <p className="font-semibold text-xl lg:text-2xl uppercase tracking-wide">Order Total: {amount?.toFixed(2)}</p>
+                    <Link href={cancelUrl}>
+                        <button className=" text-red-400 hover:underline text-sm uppercase">Cancel order</button>
+                    </Link>
+                </div>
+
+            </div>
+
+            <div className="space-y-2 px-4">
                 <p className=" text-xl text-gray-700">Enter your mobile number</p>
                 <div className="flex">
                     <span className=" border-2 bg-white py-[7px] px-2 font-semibold text-gray-700 rounded">+254</span>
