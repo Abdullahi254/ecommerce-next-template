@@ -1,9 +1,10 @@
 import Image from "next/image";
-import React, { createRef, useState } from "react";
+import React, { createRef, useState, useEffect } from "react";
 import logo from "../public/mpesa.png"
 import type { GetStaticProps } from "next"
 import { Category, Collection } from '../typing'
 import { getCategories, getCollections } from '../services'
+import { useRouter } from 'next/router'
 
 
 const PaymentCheckout = () => {
@@ -16,6 +17,24 @@ const PaymentCheckout = () => {
             setDisable(false)
         }
     }
+    const router = useRouter()
+    const { publicToken } = router.query
+
+    useEffect(() => {
+        if (typeof(publicToken) === 'string') {
+            fetchInvoice(publicToken)
+        }
+    }, [publicToken])
+
+    const fetchInvoice = async (token: string) => {
+        try {
+            const res = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?publicToken=${token}`)
+            console.log(res)
+        } catch (err) {
+            console.log("error fetching")
+        }
+    }
+
     return (
         <div className="max-w-6xl mx-auto bg-gray-50 rounded-sm p-6 shadow-md flex flex-col space-y-4">
 
