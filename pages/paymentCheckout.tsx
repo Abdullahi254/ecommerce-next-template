@@ -10,6 +10,8 @@ import { useRouter } from 'next/router'
 const PaymentCheckout = () => {
     const phone = createRef<HTMLInputElement>()
     const [disable, setDisable] = useState<boolean>(true)
+    const [invoice, setInvoice] = useState()
+    const [cancelUrl, setCancelUrl] = useState<string>('')
     const handleInputChange = () => {
         if (phone.current?.value.length !== 9) {
             setDisable(true)
@@ -29,7 +31,12 @@ const PaymentCheckout = () => {
     const fetchInvoice = async (token: string) => {
         try {
             const res = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?publicToken=${token}`)
-            console.log(res)
+            if (res.ok) {
+                const paymentSession = await res.json()
+                setInvoice(paymentSession.invoice)
+                setCancelUrl(paymentSession.PaymentAuthorizationRedirectUrl)
+                console.log(paymentSession.invoice)
+            }
         } catch (err) {
             console.log("error fetching")
         }
