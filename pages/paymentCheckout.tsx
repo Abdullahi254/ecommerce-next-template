@@ -17,7 +17,7 @@ const PaymentCheckout = () => {
     const [cancelUrl, setCancelUrl] = useState<string>()
     const [amount, setAmount] = useState<number>()
     const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<boolean>(false)
+    const [errorAlert, setError] = useState<boolean>(false)
     const handleInputChange = () => {
         if (phone.current?.value.length !== 9) {
             setDisable(true)
@@ -60,7 +60,13 @@ const PaymentCheckout = () => {
             <div className="flex justify-center">
                 <Image src={logo} alt="mpesa icon" width={120} height={120} priority className="w-auto h-auto" />
             </div>
-
+            {
+                errorAlert &&
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center" role="alert">
+                    <strong className="font-bold mr-2">Error!</strong>
+                    <span className="block sm:inline">Could not fetch order confirmation.</span>
+                </div>
+            }
             {
                 loading ? <div className="flex justify-center py-4"><TbFidgetSpinner className="text-indigo-600 text-5xl animate-spin" /> </div> :
                     <div className="bg-white p-4 space-y-3">
