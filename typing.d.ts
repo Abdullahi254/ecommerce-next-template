@@ -43,7 +43,7 @@ export interface Address {
     city: string
     country: string
     name: string
-    postalcode: String
+    postalCode: string
     region?: string
     streetAndNumber: string
     surname?: string | null

@@ -6,6 +6,7 @@ import { Address, Category, Collection, Item } from '../typing'
 import { getCategories, getCollections } from '../services'
 import { useRouter } from 'next/router'
 import Link from "next/link";
+import { TbFidgetSpinner } from "react-icons/tb"
 
 
 const PaymentCheckout = () => {
@@ -13,8 +14,10 @@ const PaymentCheckout = () => {
     const [disable, setDisable] = useState<boolean>(true)
     const [items, setItems] = useState<Item[]>()
     const [address, setAddress] = useState<Address>()
-    const [cancelUrl, setCancelUrl] = useState<string>("/")
+    const [cancelUrl, setCancelUrl] = useState<string>()
     const [amount, setAmount] = useState<number>()
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<boolean>(false)
     const handleInputChange = () => {
         if (phone.current?.value.length !== 9) {
             setDisable(true)
@@ -42,9 +45,11 @@ const PaymentCheckout = () => {
                     setAmount(paymentSession.invoice.amount as number)
                     setCancelUrl(paymentSession.PaymentAuthorizationRedirectUrl as string)
                 }
-                console.log(paymentSession.invoice)
+                setLoading(false)
             }
         } catch (err) {
+            setLoading(false)
+            setError(true)
             console.log("error fetching")
         }
     }
@@ -56,66 +61,69 @@ const PaymentCheckout = () => {
                 <Image src={logo} alt="mpesa icon" width={120} height={120} priority className="w-auto h-auto" />
             </div>
 
-            <div className="bg-white p-4 space-y-3">
-                <h2 className="font-semibold text-xl lg:text-2xl text-center uppercase">Order Confirmation</h2>
+            {
+                loading ? <div className="flex justify-center py-4"><TbFidgetSpinner className="text-indigo-600 text-5xl animate-spin" /> </div> :
+                    <div className="bg-white p-4 space-y-3">
+                        <h2 className="font-semibold text-xl lg:text-2xl text-center uppercase">Order Confirmation</h2>
 
-                <div className="py-2 border-t-2  border-gray-400 pl-4">
-                    <h3 className="text-lg font-semibold">order details:</h3>
-                </div>
+                        <div className="py-2 border-t-2  border-gray-400 pl-4">
+                            <h3 className="text-lg font-semibold">order details:</h3>
+                        </div>
 
-                <div className="py-4 border-t-2  border-gray-400 ">
-                    <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    Product name
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Quantity
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    UNIT PRICE
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                items?.map((item, index) => <tr key={index} className="bg-white border-b">
-                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                        {item.name}
-                                    </th>
-                                    <td className="px-6 py-4">
-                                        {item.quantity}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        KSH{item.unitPrice.toFixed(2)}
-                                    </td>
-                                </tr>)
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        <div className="py-4 border-t-2  border-gray-400 ">
+                            <table className="w-full text-sm text-left text-gray-500">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">
+                                            Product name
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            Quantity
+                                        </th>
+                                        <th scope="col" className="px-6 py-3">
+                                            UNIT PRICE
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        items?.map((item, index) => <tr key={index} className="bg-white border-b">
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
+                                                {item.name}
+                                            </th>
+                                            <td className="px-6 py-4">
+                                                {item.quantity}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                KSH{item.unitPrice.toFixed(2)}
+                                            </td>
+                                        </tr>)
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
 
-                <div className="p-4 border-t-2  border-gray-400 space-y-3">
-                    <h3 className=" text-lg font-semibold">Shipping Information</h3>
-                    <div className="space-y-1">
-                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Name:</span>{address?.name}</p>
-                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Country:</span>{address?.country}</p>
-                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">City:</span>{address?.city}</p>
-                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Region:</span>{address?.region}</p>
-                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Street:</span>{address?.streetAndNumber}</p>
-                        <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Postal-Code:</span>{address?.postalcode}</p>
+                        <div className="p-4 border-t-2  border-gray-400 space-y-3">
+                            <h3 className=" text-lg font-semibold">Shipping Information</h3>
+                            <div className="space-y-1">
+                                <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Name:</span>{address?.name}</p>
+                                <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Country:</span>{address?.country}</p>
+                                <p className="text-sm tracking-wide"><span className="font-semibold mr-2">City:</span>{address?.city}</p>
+                                <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Region:</span>{address?.region}</p>
+                                <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Street:</span>{address?.streetAndNumber}</p>
+                                <p className="text-sm tracking-wide"><span className="font-semibold mr-2">Postal-Code:</span>{address?.postalCode}</p>
+                            </div>
+                        </div>
+
+                        <div className="p-4 border-t-2  border-gray-400 space-y-3 flex justify-around items-center">
+                            <p className="font-semibold text-xl lg:text-2xl uppercase tracking-wide">Order Total: KSH{amount?.toFixed(2)}</p>
+                            <Link href={cancelUrl || "/"}>
+                                <button className=" text-red-400 hover:underline text-sm uppercase">Cancel order</button>
+                            </Link>
+                        </div>
+
                     </div>
-                </div>
-
-                <div className="p-4 border-t-2  border-gray-400 space-y-3 flex justify-around items-center">
-                    <p className="font-semibold text-xl lg:text-2xl uppercase tracking-wide">Order Total: {amount?.toFixed(2)}</p>
-                    <Link href={cancelUrl}>
-                        <button className=" text-red-400 hover:underline text-sm uppercase">Cancel order</button>
-                    </Link>
-                </div>
-
-            </div>
+            }
 
             <div className="space-y-2 px-4">
                 <p className=" text-xl text-gray-700">Enter your mobile number</p>
