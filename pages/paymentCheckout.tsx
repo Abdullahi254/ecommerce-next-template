@@ -56,7 +56,7 @@ const PaymentCheckout = () => {
     }
 
     return (
-        <div className="max-w-6xl mx-auto bg-gray-50 rounded-sm p-6 shadow-md flex flex-col space-y-4">
+        <div className="max-w-6xl mx-auto bg-gray-50 rounded-sm md:p-6 shadow-md flex flex-col space-y-4">
 
             <div className="flex justify-center">
                 <Image src={logo} alt="mpesa icon" width={120} height={120} priority className="w-auto h-auto" />
@@ -74,11 +74,11 @@ const PaymentCheckout = () => {
                         <h2 className="font-semibold text-xl lg:text-2xl text-center uppercase">Order Confirmation</h2>
 
                         <div className="py-2 border-t-2  border-gray-400 pl-4">
-                            <h3 className="text-lg font-semibold">order details:</h3>
+                            <h3 className="text-lg font-semibold">Order Details:</h3>
                         </div>
 
-                        <div className="py-4 border-t-2  border-gray-400 ">
-                            <table className="w-full text-sm text-left text-gray-500">
+                        <div className="py-4 border-t-2  border-gray-400 relative overflow-x-auto ">
+                            <table className="w-full table-auto text-sm text-left text-gray-500">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" className="px-6 py-3">
@@ -122,8 +122,8 @@ const PaymentCheckout = () => {
                             </div>
                         </div>
 
-                        <div className="p-4 border-t-2  border-gray-400 space-y-3 flex justify-around items-center">
-                            <p className="font-semibold text-xl lg:text-2xl uppercase tracking-wide">Order Total: KSH{separator(amount)+".00"}</p>
+                        <div className="p-4 border-t-2  border-gray-400 space-y-3 flex flex-col md:flex-row md:justify-around md:items-center">
+                            <p className="font-semibold text-lg md:text-xl lg:text-2xl uppercase tracking-wide text-indigo-600">Order Total: KSH{separator(amount)+".00"}</p>
                             <Link href={cancelUrl || "/"}>
                                 <button className=" text-red-400 hover:underline text-sm uppercase">Cancel order</button>
                             </Link>
