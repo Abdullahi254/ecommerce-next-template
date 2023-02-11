@@ -7,6 +7,7 @@ import { getCategories, getCollections } from '../services'
 import { useRouter } from 'next/router'
 import Link from "next/link";
 import { TbFidgetSpinner } from "react-icons/tb"
+import { separator } from "../utils/utils"
 
 
 const PaymentCheckout = () => {
@@ -15,7 +16,7 @@ const PaymentCheckout = () => {
     const [items, setItems] = useState<Item[]>()
     const [address, setAddress] = useState<Address>()
     const [cancelUrl, setCancelUrl] = useState<string>()
-    const [amount, setAmount] = useState<number>()
+    const [amount, setAmount] = useState<number>(0)
     const [loading, setLoading] = useState<boolean>(true)
     const [errorAlert, setError] = useState<boolean>(false)
     const handleInputChange = () => {
@@ -101,7 +102,7 @@ const PaymentCheckout = () => {
                                                 {item.quantity}
                                             </td>
                                             <td className="px-6 py-4">
-                                                KSH{item.unitPrice.toFixed(2)}
+                                                KSH{separator(item.unitPrice)+".00"}
                                             </td>
                                         </tr>)
                                     }
@@ -122,7 +123,7 @@ const PaymentCheckout = () => {
                         </div>
 
                         <div className="p-4 border-t-2  border-gray-400 space-y-3 flex justify-around items-center">
-                            <p className="font-semibold text-xl lg:text-2xl uppercase tracking-wide">Order Total: KSH{amount?.toFixed(2)}</p>
+                            <p className="font-semibold text-xl lg:text-2xl uppercase tracking-wide">Order Total: KSH{separator(amount)+".00"}</p>
                             <Link href={cancelUrl || "/"}>
                                 <button className=" text-red-400 hover:underline text-sm uppercase">Cancel order</button>
                             </Link>
