@@ -26,8 +26,21 @@ const PaymentCheckout = () => {
             setDisable(false)
         }
     }
-    const handlePay = ()=>{
-        
+    const handlePay = async () => {
+        if (phone.current?.value) {
+            const formData = new URLSearchParams();
+            formData.append("phone", `254${phone.current.value}`)
+            const resp = await fetch("/api/lipa", {
+                method: "POST",
+                body: formData.toString(),
+                headers: {
+                    "content-type": "application/x-www-form-urlencoded",
+                },
+            })
+            const textRes = await resp.text()
+            console.log(textRes)
+        }
+
     }
     const router = useRouter()
     const { publicToken } = router.query
@@ -105,7 +118,7 @@ const PaymentCheckout = () => {
                                                 {item.quantity}
                                             </td>
                                             <td className="px-6 py-4">
-                                                KSH{separator(item.unitPrice)+".00"}
+                                                KSH{separator(item.unitPrice) + ".00"}
                                             </td>
                                         </tr>)
                                     }
@@ -126,7 +139,7 @@ const PaymentCheckout = () => {
                         </div>
 
                         <div className="p-4 border-t-2  border-gray-400 space-y-3 flex flex-col md:flex-row md:justify-around md:items-center">
-                            <p className="font-semibold text-lg md:text-xl lg:text-2xl uppercase tracking-wide text-indigo-600">Order Total: KSH{separator(amount)+".00"}</p>
+                            <p className="font-semibold text-lg md:text-xl lg:text-2xl uppercase tracking-wide text-indigo-600">Order Total: KSH{separator(amount) + ".00"}</p>
                             <Link href={cancelUrl || "/"}>
                                 <button className=" text-red-400 hover:underline text-sm uppercase">Cancel order</button>
                             </Link>
