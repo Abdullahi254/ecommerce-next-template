@@ -26,6 +26,9 @@ const PaymentCheckout = () => {
             setDisable(false)
         }
     }
+    const handlePay = ()=>{
+        
+    }
     const router = useRouter()
     const { publicToken } = router.query
 
@@ -71,7 +74,7 @@ const PaymentCheckout = () => {
             {
                 loading ? <div className="flex justify-center py-4"><TbFidgetSpinner className="text-indigo-600 text-5xl animate-spin" /> </div> :
                     <div className="bg-white p-4 space-y-3">
-                        <h2 className="font-semibold text-xl lg:text-2xl text-center uppercase">Order Confirmation</h2>
+                        <h1 className="font-semibold text-xl lg:text-2xl text-center uppercase">Order Confirmation</h1>
 
                         <div className="py-2 border-t-2  border-gray-400 pl-4">
                             <h3 className="text-lg font-semibold">Order Details:</h3>
@@ -150,6 +153,7 @@ const PaymentCheckout = () => {
                 <button className='bg-indigo-600 py-3 text-white
                     rounded-md font-semibold uppercase hover:bg-gray-500 w-1/2 md:w-[30%] disabled:bg-gray-500'
                     disabled={disable}
+                    onClick={handlePay}
                 >
                     PAY
                 </button>
