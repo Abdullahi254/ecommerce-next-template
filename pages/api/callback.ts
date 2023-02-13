@@ -38,6 +38,8 @@ export default async function handler(
         },
         body: JSON.stringify(data)
       })
+      const textResponse = await response.text()
+      console.log(textResponse)
       if (response.ok) {
         const body = await response.json()
         res.redirect(body.returnUrl)
