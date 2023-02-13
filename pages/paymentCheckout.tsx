@@ -17,6 +17,7 @@ const PaymentCheckout = () => {
     const [address, setAddress] = useState<Address>()
     const [cancelUrl, setCancelUrl] = useState<string>()
     const [amount, setAmount] = useState<number>(0)
+    const [paymentId, setPaymentId] = useState<string>()
     const [loading, setLoading] = useState<boolean>(true)
     const [errorAlert, setError] = useState<boolean>(false)
     const handleInputChange = () => {
@@ -27,9 +28,10 @@ const PaymentCheckout = () => {
         }
     }
     const handlePay = async () => {
-        if (phone.current?.value) {
+        if (phone.current?.value && typeof(paymentId)==="string") {
             const formData = new URLSearchParams();
             formData.append("phone", `254${phone.current.value}`)
+            formData.append("paymentSessionId",paymentId)
             const resp = await fetch("/api/lipa", {
                 method: "POST",
                 body: formData.toString(),
@@ -61,6 +63,7 @@ const PaymentCheckout = () => {
                     setAddress(paymentSession.invoice.shippingAddress as Address)
                     setAmount(paymentSession.invoice.amount as number)
                     setCancelUrl(paymentSession.PaymentAuthorizationRedirectUrl as string)
+                    setPaymentId(paymentSession.id as string)
                 }
                 setLoading(false)
             }

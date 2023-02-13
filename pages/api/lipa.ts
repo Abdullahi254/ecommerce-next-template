@@ -38,7 +38,7 @@ export default async function handler(
                 "PartyA": req.body.phone,
                 "PartyB": shortCode,
                 "PhoneNumber": req.body.phone,
-                "CallBackURL": "https://mydomain.com/path",
+                "CallBackURL": `http://dukamoto.vercel.app/api/callback/${req.body.paymentSessionId}`,
                 "AccountReference": "Duka Moto",
                 "TransactionDesc": "Payment for goods bought"
             }
