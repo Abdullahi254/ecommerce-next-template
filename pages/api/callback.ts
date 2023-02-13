@@ -19,40 +19,28 @@ export default async function handler(
     })
     const { id } = req.query
     if (req.method === 'POST' && typeof (id) === "string") {
-      if (req.body.Body.stkCallback.ResultCode === 0) {
-        console.log("payment successful")
-        console.log(req.body.Body)
-        // const data = {
-        //   paymentSessionId: id,
-        //   transactionId: req.body.Body.stkCallback.CheckoutRequestID,
-        //   state: "processed",
-        // }
-        // await fetch("/api/listener", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(data)
-        // })
-      } else {
-        console.log("payment failed")
-        console.log(req.body.Body)
-        // const data = {
-        //   paymentSessionId: id,
-        //   transactionId: req.body.Body.stkCallback.CheckoutRequestID,
-        //   state: "failed",
-        //   error: {
-        //     code: "payment_failed",
-        //     message: "Request cancelled by user."
-        //   }
-        // }
-        // await fetch("/api/listener", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(data)
-        // })
+      console.log("payment successful")
+      console.log(req.body.Body)
+      const data = {
+        paymentSessionId: id,
+        transactionId: req.body.Body.stkCallback.CheckoutRequestID,
+        state: req.body.Body.stkCallback.ResultCode === 0 ? "processed" : "failed",
+        error:{
+          code:"transaction_failed",
+          message: req.body.Body.stkCallback.ResultDesc
+        }
+      }
+      const response = await fetch("/api/listener", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PRIMARY_SECRET_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data)
+      })
+      if(response.ok){
+        const body = await response.json()
+        res.redirect(body.returnUrl)
       }
       res.status(200).send("THANK YOU SAFARICOM")
     } else {
