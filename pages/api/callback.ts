@@ -25,12 +25,12 @@ export default async function handler(
         paymentSessionId: id,
         transactionId: req.body.Body.stkCallback.CheckoutRequestID,
         state: req.body.Body.stkCallback.ResultCode === 0 ? "processed" : "failed",
-        error:{
-          code:"transaction_failed",
+        error: {
+          code: "transaction_failed",
           message: req.body.Body.stkCallback.ResultDesc
         }
       }
-      const response = await fetch("/api/listener", {
+      const response = await fetch("https://payment.snipcart.com/api/private/custom-payment-gateway/payment", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PRIMARY_SECRET_API_KEY}`,
@@ -38,7 +38,7 @@ export default async function handler(
         },
         body: JSON.stringify(data)
       })
-      if(response.ok){
+      if (response.ok) {
         const body = await response.json()
         res.redirect(body.returnUrl)
       }
@@ -51,7 +51,3 @@ export default async function handler(
   }
 
 }
-
-
-//sent it to a post endpoint
-//keep requeting the end point --- data is in the req
