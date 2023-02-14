@@ -182,7 +182,7 @@ const PaymentCheckout = () => {
                 </button>
                 {paymentError && <div className="text-red-500 px-4 py-3 rounded relative text-center" role="alert">
                     <strong className="font-bold mr-2">Error!</strong>
-                    <span className="block sm:inline">Transaction took too long. <Link href={"/"}><strong className="text-indigo-600 underline text-sm">Try again</strong></Link></span>
+                    <span className="block sm:inline">Transaction took too long. <strong onClick={()=>setPaymentError(false)} className="text-indigo-600 underline text-sm cursor-pointer">Try again</strong></span>
                 </div>}
             </div>
 
