@@ -7,6 +7,7 @@ import { getCategories, getCollections } from '../services'
 import { useRouter } from 'next/router'
 import Link from "next/link";
 import { TbFidgetSpinner } from "react-icons/tb"
+import { CgSpinner } from "react-icons/cg"
 import { separator } from "../utils/utils"
 
 
@@ -20,6 +21,8 @@ const PaymentCheckout = () => {
     const [paymentId, setPaymentId] = useState<string>()
     const [loading, setLoading] = useState<boolean>(true)
     const [errorAlert, setError] = useState<boolean>(false)
+    const [paymentLoad, setPaymentLoad] = useState<boolean>(false)
+    const [paymentError, setPaymentError] = useState<boolean>(false)
     const handleInputChange = () => {
         if (phone.current?.value.length !== 9) {
             setDisable(true)
@@ -29,6 +32,7 @@ const PaymentCheckout = () => {
     }
     const handlePay = async () => {
         if (phone.current?.value && typeof (paymentId) === "string") {
+            setPaymentLoad(true)
             const formData = new URLSearchParams();
             formData.append("phone", `254${phone.current.value}`)
             formData.append("paymentSessionId", paymentId)
@@ -42,6 +46,10 @@ const PaymentCheckout = () => {
             })
             const textRes = await resp.text()
             console.log(textRes)
+            setTimeout(() => {
+                setPaymentLoad(false)
+                setPaymentError(true)
+            }, 30000)
         }
 
     }
@@ -80,7 +88,7 @@ const PaymentCheckout = () => {
             </div>
             {
                 errorAlert &&
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center" role="alert">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center w-[90%] mx-auto" role="alert">
                     <strong className="font-bold mr-2">Error!</strong>
                     <span className="block sm:inline">Could not fetch order details.</span>
                 </div>
@@ -163,14 +171,19 @@ const PaymentCheckout = () => {
                 </div>
             </div>
 
-            <div className="px-4">
+            <div className="px-4 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 items-center">
                 <button className='bg-indigo-600 py-3 text-white
-                    rounded-md font-semibold uppercase hover:bg-gray-500 w-1/2 md:w-[30%] disabled:bg-gray-500'
-                    disabled={disable}
+                    rounded-md font-semibold uppercase hover:bg-gray-500 w-1/2 md:w-[30%] disabled:bg-gray-500 relative'
+                    disabled={disable || errorAlert || paymentLoad || paymentError}
                     onClick={handlePay}
                 >
+                    {paymentLoad && <CgSpinner className=" animate-spin text-3xl md:text-4xl absolute left-2 top-3 md:top-2" />}
                     PAY
                 </button>
+                {paymentError && <div className="text-red-500 px-4 py-3 rounded relative text-center" role="alert">
+                    <strong className="font-bold mr-2">Error!</strong>
+                    <span className="block sm:inline">Transaction took too long. <Link href={"/"}><strong className="text-indigo-600 underline text-sm">Try again</strong></Link></span>
+                </div>}
             </div>
 
             <div className=" bg-white p-6">
