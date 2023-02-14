@@ -28,10 +28,11 @@ const PaymentCheckout = () => {
         }
     }
     const handlePay = async () => {
-        if (phone.current?.value && typeof(paymentId)==="string") {
+        if (phone.current?.value && typeof (paymentId) === "string") {
             const formData = new URLSearchParams();
             formData.append("phone", `254${phone.current.value}`)
-            formData.append("paymentSessionId",paymentId)
+            formData.append("paymentSessionId", paymentId)
+            formData.append("amount", amount.toString())
             const resp = await fetch("/api/lipa", {
                 method: "POST",
                 body: formData.toString(),
@@ -44,35 +45,32 @@ const PaymentCheckout = () => {
         }
 
     }
-    const router = useRouter()
-    const { publicToken } = router.query
+    const { query, isReady } = useRouter()
+    const { publicToken } = query
 
     useEffect(() => {
-        if (typeof (publicToken) === 'string') {
-            fetchInvoice(publicToken)
-        }
-    }, [publicToken])
-
-    const fetchInvoice = async (token: string) => {
-        try {
-            const res = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?publicToken=${token}`)
-            if (res.ok) {
-                const paymentSession = await res.json()
-                if (paymentSession.invoice.items) {
+        const fetchInvoice = async () => {
+            if (isReady) {
+                try {
+                    const res = await fetch(`https://payment.snipcart.com/api/public/custom-payment-gateway/payment-session?publicToken=${publicToken}`)
+                    const paymentSession = await res.json()
                     setItems(paymentSession.invoice.items as Item[])
                     setAddress(paymentSession.invoice.shippingAddress as Address)
                     setAmount(paymentSession.invoice.amount as number)
                     setCancelUrl(paymentSession.PaymentAuthorizationRedirectUrl as string)
                     setPaymentId(paymentSession.id as string)
+                    setLoading(false)
                 }
-                setLoading(false)
+                catch (err) {
+                    setLoading(false)
+                    setError(true)
+                    console.log("error fetching")
+                }
             }
-        } catch (err) {
-            setLoading(false)
-            setError(true)
-            console.log("error fetching")
         }
-    }
+        fetchInvoice()
+    }, [publicToken, isReady])
+
 
     return (
         <div className="max-w-6xl mx-auto bg-gray-50 rounded-sm md:p-6 shadow-md flex flex-col space-y-4">
@@ -84,7 +82,7 @@ const PaymentCheckout = () => {
                 errorAlert &&
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center" role="alert">
                     <strong className="font-bold mr-2">Error!</strong>
-                    <span className="block sm:inline">Could not fetch order confirmation.</span>
+                    <span className="block sm:inline">Could not fetch order details.</span>
                 </div>
             }
             {
