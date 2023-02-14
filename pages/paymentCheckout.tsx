@@ -45,11 +45,11 @@ const PaymentCheckout = () => {
                 },
             })
             const textRes = await resp.text()
-            console.log(textRes)
+            console.log(JSON.parse(textRes).CheckoutRequestID)
             setTimeout(() => {
                 setPaymentLoad(false)
                 setPaymentError(true)
-            }, 30000)
+            }, 60000)
         }
 
     }
