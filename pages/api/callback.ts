@@ -19,8 +19,7 @@ export default async function handler(
     })
     const { id } = req.query
     if (req.method === 'POST' && typeof (id) === "string") {
-      console.log("payment successful")
-      console.log(req.body.Body)
+      console.log("processing payment for transaction:", id)
       const data = {
         paymentSessionId: id,
         transactionId: req.body.Body.stkCallback.CheckoutRequestID,
@@ -38,8 +37,6 @@ export default async function handler(
         },
         body: JSON.stringify(data)
       })
-      const textResponse = await response.text()
-      console.log(textResponse)
       if (response.ok) {
         const body = await response.json()
         res.redirect(body.returnUrl)
