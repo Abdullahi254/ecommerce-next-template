@@ -84,11 +84,8 @@ export default async function handler(
                 body: JSON.stringify(data)
               })
               if (snipRes.ok) {
-                const body = await response.json()
+                const body = await snipRes.json()
                 res.redirect(body.returnUrl)
-                res.status(200).json({
-                    message:"successfully created payment"
-                })
               }else{
                 throw new Error("Error making snipcart payment")
               }
