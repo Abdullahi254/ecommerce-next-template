@@ -15,7 +15,7 @@ async function fetchRetry(url: string, options: Option): Promise<any> {
         const res = await fetch(url, options)
         const textRes = await res.text()
         const errorCode:undefined|string = JSON.parse(textRes).errorCode
-        if(errorCode==="500.001.1001"){
+        if(errorCode){
             console.log("Retrying fetch")
             return fetchRetry(url,options)
         }
