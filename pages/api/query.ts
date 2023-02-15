@@ -89,6 +89,7 @@ export default async function handler(
             const snipJsonRes = await snipRes.json()
             console.log("snipcart response", snipJsonRes)
             if (snipRes.ok) {
+                console.log("snipres.ok is true")
                 res.status(200).json(snipJsonRes)
                 console.log("snpcart response sent to client positively")
             } else {
