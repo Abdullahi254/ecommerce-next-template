@@ -32,24 +32,35 @@ const PaymentCheckout = () => {
     }
     const handlePay = async () => {
         if (phone.current?.value && typeof (paymentId) === "string") {
-            setPaymentLoad(true)
-            const formData = new URLSearchParams();
-            formData.append("phone", `254${phone.current.value}`)
-            formData.append("paymentSessionId", paymentId)
-            formData.append("amount", amount.toString())
-            const resp = await fetch("/api/lipa", {
-                method: "POST",
-                body: formData.toString(),
-                headers: {
-                    "content-type": "application/x-www-form-urlencoded",
-                },
-            })
-            const textRes = await resp.text()
-            console.log(JSON.parse(textRes).CheckoutRequestID)
-            setTimeout(() => {
-                setPaymentLoad(false)
-                setPaymentError(true)
-            }, 60000)
+            try {
+                setPaymentLoad(true)
+                const formData = new URLSearchParams();
+                formData.append("phone", `254${phone.current.value}`)
+                formData.append("amount", amount.toString())
+                const resp = await fetch("/api/lipa", {
+                    method: "POST",
+                    body: formData.toString(),
+                    headers: {
+                        "content-type": "application/x-www-form-urlencoded",
+                    },
+                })
+                const formData2 = new URLSearchParams();
+                const textRes = await resp.text()
+                formData.append("CheckoutRequestID", JSON.parse(textRes).CheckoutRequestID)
+                await fetch(`/api/query?id=${paymentId}`, {
+                    method: "POST",
+                    body: formData2.toString(),
+                    headers: {
+                        "content-type": "application/x-www-form-urlencoded",
+                    },
+                })
+                setTimeout(() => {
+                    setPaymentLoad(false)
+                    setPaymentError(true)
+                }, 60000)
+            } catch (er) {
+
+            }
         }
 
     }
@@ -182,7 +193,7 @@ const PaymentCheckout = () => {
                 </button>
                 {paymentError && <div className="text-red-500 px-4 py-3 rounded relative text-center" role="alert">
                     <strong className="font-bold mr-2">Error!</strong>
-                    <span className="block sm:inline">Transaction took too long. <strong onClick={()=>setPaymentError(false)} className="text-indigo-600 underline text-sm cursor-pointer">Try again</strong></span>
+                    <span className="block sm:inline">Transaction took too long. <strong onClick={() => setPaymentError(false)} className="text-indigo-600 underline text-sm cursor-pointer">Try again</strong></span>
                 </div>}
             </div>
 
