@@ -30,6 +30,7 @@ const PaymentCheckout = () => {
             setDisable(false)
         }
     }
+    const router = useRouter()
     const handlePay = async () => {
         if (phone.current?.value && typeof (paymentId) === "string") {
             try {
@@ -45,13 +46,18 @@ const PaymentCheckout = () => {
                     },
                 })
                 const textRes = await resp.text()
-                await fetch(`/api/query?id=${paymentId}&checkoutRequestId=${JSON.parse(textRes).CheckoutRequestID}`, {
+                const response = await fetch(`/api/query?id=${paymentId}&checkoutRequestId=${JSON.parse(textRes).CheckoutRequestID}`, {
                     method: "POST"
                 })
-                setTimeout(() => {
-                    setPaymentLoad(false)
-                    setPaymentError(true)
-                }, 60000)
+                if (response.ok) {
+                    //redirect
+                    const textResponse = await response.text()
+                    const returnUrl = JSON.parse(textResponse).returnUrl
+                    console.log(returnUrl)
+                    router.push(returnUrl)
+                } else {
+                    throw new Error("something went wrong")
+                }
             } catch (er) {
                 setPaymentLoad(false)
                 setPaymentError(true)
@@ -188,7 +194,7 @@ const PaymentCheckout = () => {
                 </button>
                 {paymentError && <div className="text-red-500 px-4 py-3 rounded relative text-center" role="alert">
                     <strong className="font-bold mr-2">Error!</strong>
-                    <span className="block sm:inline">Something went wrong. <strong onClick={() => setPaymentError(false)} className="text-indigo-600 underline text-sm cursor-pointer">Try again</strong></span>
+                    <span className="block sm:inline">Something went wrong contact help or <strong onClick={() => setPaymentError(false)} className="text-indigo-600 underline text-sm cursor-pointer">Try again</strong></span>
                 </div>}
             </div>
 
