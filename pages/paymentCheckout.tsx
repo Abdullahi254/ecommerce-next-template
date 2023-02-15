@@ -45,27 +45,38 @@ const PaymentCheckout = () => {
                         "content-type": "application/x-www-form-urlencoded",
                     },
                 })
-                setTimeout(async () => {
-                    const textRes = await resp.text()
-                    const response = await fetch(`/api/query?id=${paymentId}&checkoutRequestId=${JSON.parse(textRes).CheckoutRequestID}`, {
-                        method: "POST"
-                    })
-                    if (response.ok) {
-                        //redirect
-                        const textResponse = await response.text()
-                        const returnUrl = JSON.parse(textResponse).returnUrl
-                        console.log(returnUrl)
-                        router.push(returnUrl)
-                    } else {
-                        throw new Error("something went wrong")
-                    }
-                }, 25000)
+                const textRes = await resp.text()
+                const checkoutRequestId = await JSON.parse(textRes).CheckoutRequestID as string
+                await queryFunction(paymentId,checkoutRequestId,25000)
             } catch (er) {
                 setPaymentLoad(false)
                 setPaymentError(true)
             }
         }
 
+    }
+    const queryFunction = async (paymentId: string, checkoutRequestId: string, time: number) => {
+        setTimeout(async () => {
+            try {
+                const response = await fetch(`/api/query?id=${paymentId}&checkoutRequestId=${checkoutRequestId}`, {
+                    method: "POST"
+                })
+                if (response.ok) {
+                    //redirect
+                    const textResponse = await response.text()
+                    const returnUrl = JSON.parse(textResponse).returnUrl
+                    console.log(returnUrl)
+                    router.push(returnUrl)
+                } else {
+                    console.log("response from snip not ok")
+                    throw new Error("something went wrong")
+                }
+            } catch (er) {
+                setPaymentLoad(false)
+                setPaymentError(true)
+            }
+
+        }, time)
     }
     const { query, isReady } = useRouter()
     const { publicToken } = query
