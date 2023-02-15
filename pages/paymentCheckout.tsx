@@ -38,14 +38,14 @@ const PaymentCheckout = () => {
                 const formData = new URLSearchParams();
                 formData.append("phone", `254${phone.current.value}`)
                 formData.append("amount", amount.toString())
+                const resp = await fetch("/api/lipa", {
+                    method: "POST",
+                    body: formData.toString(),
+                    headers: {
+                        "content-type": "application/x-www-form-urlencoded",
+                    },
+                })
                 setTimeout(async () => {
-                    const resp = await fetch("/api/lipa", {
-                        method: "POST",
-                        body: formData.toString(),
-                        headers: {
-                            "content-type": "application/x-www-form-urlencoded",
-                        },
-                    })
                     const textRes = await resp.text()
                     const response = await fetch(`/api/query?id=${paymentId}&checkoutRequestId=${JSON.parse(textRes).CheckoutRequestID}`, {
                         method: "POST"
@@ -59,7 +59,7 @@ const PaymentCheckout = () => {
                     } else {
                         throw new Error("something went wrong")
                     }
-                },25000)
+                }, 25000)
             } catch (er) {
                 setPaymentLoad(false)
                 setPaymentError(true)
