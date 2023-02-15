@@ -34,7 +34,8 @@ export default async function handler(
 
     if (req.method === 'POST') {
         try {
-            const { id } = req.query
+            const { id, checkoutRequestId } = req.query
+            if(!checkoutRequestId || !id) throw new Error("undefined CheckoutRequestID or SessionID")
             const tokenUrl = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
             const queryUrl = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query"
             const buff = Buffer.from(process.env.NEXT_SAFARICOM_CONSUMER_KEY + ":" +
@@ -62,7 +63,7 @@ export default async function handler(
                     "BusinessShortCode": shortCode,
                     "Password": password,
                     "Timestamp": timeStamp,
-                    "CheckoutRequestID": req.body.checkoutRequestID,
+                    "CheckoutRequestID": checkoutRequestId,
                 })
             }
             const response = await fetchRetry(queryUrl, options)

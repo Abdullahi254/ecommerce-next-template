@@ -44,15 +44,9 @@ const PaymentCheckout = () => {
                         "content-type": "application/x-www-form-urlencoded",
                     },
                 })
-                const formData2 = new URLSearchParams();
                 const textRes = await resp.text()
-                formData.append("CheckoutRequestID", JSON.parse(textRes).CheckoutRequestID)
-                await fetch(`/api/query?id=${paymentId}`, {
-                    method: "POST",
-                    body: formData2.toString(),
-                    headers: {
-                        "content-type": "application/x-www-form-urlencoded",
-                    },
+                await fetch(`/api/query?id=${paymentId}&checkoutRequestId=${JSON.parse(textRes).CheckoutRequestID}`, {
+                    method: "POST"
                 })
                 setTimeout(() => {
                     setPaymentLoad(false)
