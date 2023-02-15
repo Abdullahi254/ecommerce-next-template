@@ -86,12 +86,11 @@ export default async function handler(
                 },
                 body: JSON.stringify(data)
             })
-            const snipTextRes = await snipRes.text()
-            console.log("snipcart response", snipTextRes)
+            const snipJsonRes = await snipRes.json()
+            console.log("snipcart response", snipJsonRes)
             if (snipRes.ok) {
-                console.log("snpcart responded positively")
-                const returnUrl = JSON.parse(snipTextRes).returnUrl
-                res.status(200).json({returnUrl})
+                res.status(200).json(snipJsonRes)
+                console.log("snpcart response sent to client positively")
             } else {
                 throw new Error("Error making snipcart payment")
             }

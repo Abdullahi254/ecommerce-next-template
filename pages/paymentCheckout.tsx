@@ -68,7 +68,7 @@ const PaymentCheckout = () => {
                     console.log(returnUrl)
                     router.push(returnUrl)
                 } else {
-                    console.log("response from snip not ok")
+                    console.log("client: response from snip not ok")
                     throw new Error("something went wrong")
                 }
             } catch (er) {
