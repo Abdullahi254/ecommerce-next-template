@@ -71,20 +71,27 @@ export default async function handler(
             const data = {
                 paymentSessionId: id,
                 transactionId: response.CheckoutRequestID,
-                state: response.ResultCode === "0" ? "processed" : "failed",
+                state: "processed",
+            }
+            const dataWithError = {
+                paymentSessionId: id,
+                transactionId: response.CheckoutRequestID,
+                state: "failed",
                 error: {
                     code: "transaction_failed",
                     message: response.ResultDesc
                 }
             }
-            console.log("custom fetch response",response)
+            console.log("custom fetch response", response)
             const snipRes = await fetch("https://payment.snipcart.com/api/private/custom-payment-gateway/payment", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${process.env.NEXT_PRIMARY_SECRET_API_KEY}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(
+                    response.ResultCode === "0" ? data : dataWithError
+                )
             })
             const snipJsonRes = await snipRes.json()
             console.log("snipcart response", snipJsonRes)
