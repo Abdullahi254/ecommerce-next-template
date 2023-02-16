@@ -71,7 +71,7 @@ export default async function handler(
             const data = {
                 paymentSessionId: id,
                 transactionId: response.CheckoutRequestID,
-                state: response.ResultCode === 0 ? "processed" : "failed",
+                state: response.ResultCode === "0" ? "processed" : "failed",
                 error: {
                     code: "transaction_failed",
                     message: response.ResultDesc

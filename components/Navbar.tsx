@@ -6,7 +6,7 @@ import { BsCart3 } from "react-icons/bs"
 import { Category } from '../typing'
 import { useRouter } from 'next/router'
 // @ts-expect-error
-import { useSnipcart} from 'use-snipcart';
+import { useSnipcart } from 'use-snipcart';
 
 type Props = {
     categories: Category[]
@@ -43,12 +43,14 @@ const Navbar = ({ categories }: Props) => {
                 }
             </div>
 
+            <Link href="/">
+                <div className='relative flex items-center cursor-pointer snipcart-checkout py-[14px]'>
+                    <span className='absolute top-0 left-[15%] px-2 rounded-full bg-indigo-600 text-sm text-white'>{cart?.items?.count || 0}</span>
+                    <BsCart3 className=' text-[26px] mr-4 text-gray-400' />
+                    <span className='tracking-wide font-semibold text-sm md:text-base'>KSH{subtotal.toFixed(2)}</span>
+                </div>
+            </Link>
 
-            <div className='relative flex items-center cursor-pointer snipcart-checkout'>
-                <span className='absolute top-0 left-[15%] px-2 rounded-full bg-indigo-600 text-sm text-white'>{cart?.items?.count || 0}</span>
-                <BsCart3 className=' text-[26px] mr-4 text-gray-400' />
-                <span className='tracking-wide font-semibold text-sm md:text-base'>KSH{subtotal.toFixed(2)}</span>
-            </div>
         </div>
     )
 }
