@@ -6,6 +6,7 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body>
+        <link rel="stylesheet" type="text/css" href="https://cdn.snipcart.com/themes/v3.0/default/snipcart.css" />
         <Main />
         <NextScript />
 
