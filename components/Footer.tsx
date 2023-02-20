@@ -46,8 +46,12 @@ const Footer = ({ categories, collections }: Props) => {
                 <p className=' text-gray-400 tracking-wide'>© 2023 Duka Moto. All rights reserved.</p>
 
                 <div className='flex space-x-6 items-center'>
-                    <BsLinkedin className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer rounded-sm' />
-                    <BsGithub className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer' />
+                    <Link href="https://linkedin.com/in/abdullahi-mohamud-aa04291b6" target="_blank">
+                        <BsLinkedin className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer rounded-sm' />
+                    </Link>
+                    <Link href="https://github.com/Abdullahi254" target="_blank">
+                        <BsGithub className='text-[26px] text-gray-600 hover:text-gray-800 cursor-pointer' />
+                    </Link>
                 </div>
             </div>
 
