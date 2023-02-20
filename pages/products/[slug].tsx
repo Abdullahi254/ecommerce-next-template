@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Head from 'next/head'
 import React, { useState, createRef } from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -70,6 +71,13 @@ const Product: NextPage<{
     };
 
     return (
+      <>
+      <Head>
+          <title>products</title>
+          <meta name="description" content="a selection of different items to choose from" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
       <div className=' grid grid-cols-1 lg:grid-cols-2 gap-4  max-w-7xl mx-auto my-6 overflow-x-hidden'>
         <div>
           <Carousel
@@ -194,6 +202,7 @@ const Product: NextPage<{
         </div>
 
       </div>
+      </>
     )
   }
 
